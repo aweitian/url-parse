@@ -1,0 +1,33 @@
+{
+  "name": "aweitian/url-parse",
+  "description": "按 *** 规则解析 URL的PATH部分",
+  "type": "project",
+  "keywords": [
+    "aweitian",
+    "tiananwei",
+    "parse",
+    "pmcai",
+    "url"
+  ],
+  "homepage": "https://github.com/aweitian/url-parse",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "awei.tian@qq.com",
+      "email": "531164479@qq.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "require-dev": {
+        "phpunit/phpunit": "~5.0"
+  },
+  "autoload": {
+    "files": [],
+    "psr-4": {
+      "Tian\\UrlParse\\": "src/"
+    }
+  }
+}
