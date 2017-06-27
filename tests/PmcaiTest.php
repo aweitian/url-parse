@@ -23,7 +23,7 @@ class PmcaiTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('c', $demo->control);
 		$this->assertEquals('a', $demo->action);
 		
-		$demo = new \Tian\UrlParse\Pmcai('http://www.baidu.com/');
+		$demo = new \Tian\UrlParse\Pmcai('http://www.baidu.com/?c=g');
 		$this->assertEmpty($demo->module);
 		$this->assertEmpty($demo->info);
 		$this->assertEmpty($demo->prefix);
@@ -35,6 +35,13 @@ class PmcaiTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('a', $demo->control);
 		$this->assertEquals('b', $demo->action);
 		
+		$url = new \Tian\Url($demo->raw);
+		$url->setPath($demo->toString());
+		$url->setQuery('c', 'gg');
+		$url->setQuery('page', 1);
+		$url->setQuery('h', 1);
+// 		var_dump($url->toString(false));
+		$this->assertEquals('http://www.baidu.com/c?c=gg&page=1&h=1', $url->toString(false));
 	}
 }
 

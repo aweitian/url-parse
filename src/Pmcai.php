@@ -10,12 +10,11 @@
  * 	c为控制器名称
  * 	a为动作名称
  * 	i为动作后剩余部分,称为INFO
- * 依赖:
- * 	\tian\url
  */
 namespace Tian\UrlParse;
 
 class Pmcai {
+	public $raw;
 	private $http_entry;
 	private $http_entry_len;
 	private $mask;
@@ -40,6 +39,7 @@ class Pmcai {
 	 */
 	public function __construct($url, $http_entry = "", $mask = "ca") {
 		if ($url) {
+			$this->raw = $url;
 			$this->setPath ( parse_url ( $url, PHP_URL_PATH ), $http_entry, $mask );
 			$this->parse ();
 		}
@@ -115,6 +115,50 @@ class Pmcai {
 			}
 			$x ++;
 		}
+	}
+	/**
+	 *
+	 * @param string $v        	
+	 * @return \Tian\UrlParse\Pmcai
+	 */
+	public function setControl($v) {
+		$this->control = $v;
+		return $this;
+	}
+	/**
+	 *
+	 * @param string $v        	
+	 * @return \Tian\UrlParse\Pmcai
+	 */
+	public function setAction($v) {
+		$this->action = $v;
+		return $this;
+	}
+	public function __toString() {
+		$ret = '';
+		if ($this->prefix) {
+			$ret .= '/' . trim ( $this->prefix, '/' );
+		}
+		if (! empty ( $this->module )) {
+			$ret .= '/' . implode ( '/', $this->module );
+		}
+		if (! $this->control) {
+			$ret .= '/' . $this->control;
+		}
+		if (! $this->action) {
+			$ret .= '/' . $this->action;
+		}
+		if (! empty ( $this->info )) {
+			$ret .= '/' . implode ( '/', $this->info );
+		}
+		return $ret;
+	}
+	/**
+	 * 以字符串形式返回PATH部分
+	 * @return string
+	 */
+	public function toString() {
+		return $this->__toString();
 	}
 	public static function isValidMask($mask) {
 		return preg_match ( "/^m*(ca|c)?$/", $mask );
