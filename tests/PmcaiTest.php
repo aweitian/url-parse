@@ -15,10 +15,9 @@ class PmcaiTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('c', $demo->control);
 		$this->assertEquals('a', $demo->action);
 		
-		
-		$demo->setPath('/m/c/a/i1',null,'mca')->parse();
+		$demo->setPath('/m/c/a/i11',null,'mca')->parse();
 		$this->assertArraySubset(['m'], $demo->module);
-		$this->assertArraySubset(['i1'], $demo->info);
+		$this->assertArraySubset(['i11'], $demo->info);
 		$this->assertEquals('/p1/p2', $demo->prefix);
 		$this->assertEquals('c', $demo->control);
 		$this->assertEquals('a', $demo->action);
