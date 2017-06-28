@@ -10,9 +10,9 @@ namespace Tian\UrlParse;
 
 class Pmi {
 	public $raw;
-	private $prefix;
-	private $http_entry;
-	private $http_entry_len;
+	private $prefix = "";
+	private $http_entry = "";
+	private $http_entry_len = 0;
 	private $moduleSkip = 0;
 	/**
 	 * 去掉HTTP_ENTRY的URL PATH部分
@@ -25,16 +25,24 @@ class Pmi {
 	private $path;
 	/**
 	 *
-	 * @param string $url-完整路径        	
-	 * @param string $http_entry-入口路径        	
-	 * @param int $moduleSkip-模块目录长度        	
+	 * @param string $url-完整路径
+	 *        	http_entry-入口路径,moduleSkip-模块目录长度
+	 * @param array $conf        	
+	 *
 	 */
-	public function __construct($url, $http_entry = "", $moduleSkip = 0) {
+	public function __construct($url, array $conf = []) {
 		if ($url) {
 			$this->raw = $url;
-			$this->moduleSkip = $moduleSkip;
-			$this->setPath ( parse_url ( $url, PHP_URL_PATH ), $http_entry, $moduleSkip );
-			$this->parse();
+			if (isset ( $conf ['http_entry'] )) {
+				$this->prefix = $conf ['http_entry'];
+				$this->http_entry = $conf ['http_entry'];
+				$this->http_entry_len = strlen ( $conf ['http_entry'] );
+			}
+			if (isset ( $conf ['moduleSkip'] )) {
+				$this->moduleSkip = $conf ['moduleSkip'];
+			}
+			$this->setPath ( parse_url ( $url, PHP_URL_PATH ) );
+			$this->parse ();
 		}
 	}
 	/**
@@ -87,13 +95,11 @@ class Pmi {
 	 * @return \Tian\UrlParse\Pmi
 	 */
 	public static function getInstance($url, array $conf = array()) {
-		$http_entry = isset ( $conf ["http_entry"] ) ? $conf ["http_entry"] : "";
-		$moduleSkip = isset ( $conf ["moduleSkip"] ) ? $conf ["moduleSkip"] : 0;
-		return new self ( $url, $http_entry, $moduleSkip );
+		return new self ( $url, $conf );
 	}
 	/**
-	 * 
-	 * @param string $v
+	 *
+	 * @param string $v        	
 	 * @return \Tian\UrlParse\Pmi
 	 */
 	public function setInfo($v) {
@@ -103,10 +109,11 @@ class Pmi {
 	
 	/**
 	 * 返回URL PATH部分
+	 *
 	 * @return string
 	 */
 	public function toString() {
-		return $this->__toString();
+		return $this->__toString ();
 	}
 	public function __toString() {
 		$ret = '';
