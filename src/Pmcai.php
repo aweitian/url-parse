@@ -15,9 +15,9 @@ namespace Tian\UrlParse;
 
 class Pmcai {
 	public $raw;
-	private $http_entry;
-	private $http_entry_len;
-	private $mask;
+	private $http_entry = "";
+	private $http_entry_len = 0;
+	private $mask = "ca";
 	private $path;
 	public $prefix = "";
 	public $module = array ();
@@ -33,14 +33,24 @@ class Pmcai {
 	
 	/**
 	 *
-	 * @param string $url-完整路径        	
-	 * @param string $http_entry-入口路径        	
-	 * @param string $mask-/^m*(ca|c)?$/        	
+	 * @param string $url-完整路径
+	 *        	['http_entry' => '', 'mask' => 'ca'] /^m*(ca|c)?$/
+	 * @param array $conf$http_entry-入口路径        	
 	 */
-	public function __construct($url, $http_entry = "", $mask = "ca") {
+	public function __construct($url, array $conf = []) {
 		if ($url) {
 			$this->raw = $url;
-			$this->setPath ( parse_url ( $url, PHP_URL_PATH ), $http_entry, $mask );
+			$http_entry = "";
+			$http_entry = "";
+			if (isset ( $conf ['http_entry'] )) {
+				$this->prefix = $conf ['http_entry'];
+				$this->http_entry = $conf ['http_entry'];
+				$this->http_entry_len = strlen ( $conf ['http_entry'] );
+			}
+			if (isset ( $conf ['mask'] )) {
+				$this->mask = $conf ['mask'];
+			}
+			$this->setPath ( parse_url ( $url, PHP_URL_PATH ) );
 			$this->parse ();
 		}
 	}
@@ -74,9 +84,7 @@ class Pmcai {
 	 * @return Tian\UrlParse\Pmcai
 	 */
 	public static function getInstance($url, array $conf = array()) {
-		$http_entry = isset ( $conf ["http_entry"] ) ? $conf ["http_entry"] : "";
-		$mask = isset ( $conf ["mask"] ) ? $conf ["mask"] : "ca";
-		return new self ( $url, $http_entry, $mask );
+		return new self ( $url, $conf );
 	}
 	public function setMask($mask) {
 		$this->mask = $mask;
@@ -155,10 +163,11 @@ class Pmcai {
 	}
 	/**
 	 * 以字符串形式返回PATH部分
+	 *
 	 * @return string
 	 */
 	public function toString() {
-		return $this->__toString();
+		return $this->__toString ();
 	}
 	public static function isValidMask($mask) {
 		return preg_match ( "/^m*(ca|c)?$/", $mask );
